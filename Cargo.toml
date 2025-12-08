@@ -1,0 +1,30 @@
+[workspace]
+members = ["packages/swc"]
+
+resolver = "2"
+
+[workspace.package]
+authors      = []
+edition      = "2021"
+homepage     = ""
+license      = "MIT"
+repository   = "https://github.com/yourusername/enforce-direct-access"
+rust-version = "1.82"
+
+[workspace.dependencies]
+heck       = { version = "0.5" }
+regex      = { version = "1.12.2" }
+serde      = { version = "1.0.228" }
+serde_json = { version = "1.0.145" }
+swc_core   = { version = "46.0.3" }
+
+[profile.release]
+# This removes more dead code
+codegen-units = 1
+lto           = true
+
+# Optimize for size
+opt-level = "s"
+
+# Strip debug symbols
+# strip = "symbols"

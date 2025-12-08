@@ -1,0 +1,36 @@
+{
+  "name": "@shined/swc-plugin-enforce-direct-access",
+  "version": "0.0.1",
+  "description": "SWC plugin for enforcing direct access patterns",
+  "author": {
+    "name": "ityuany"
+  },
+  "license": "MIT",
+  "main": "swc_plugin_enforce_direct_access.wasm",
+  "files": [
+    "swc_plugin_enforce_direct_access.wasm",
+    "README.md"
+  ],
+  "keywords": [
+    "swc",
+    "swc-plugin",
+    "enforce",
+    "direct-access",
+    "transform",
+    "wasm"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "build": "cargo build --release --target wasm32-wasip1",
+    "postbuild": "cp ../../target/wasm32-wasip1/release/swc_plugin_enforce_direct_access.wasm .",
+    "test": "cargo test",
+    "clean": "cargo clean",
+    "prepublishOnly": "clean-pkg-json"
+  },
+  "devDependencies": {
+    "clean-pkg-json": "^1.3.0"
+  }
+}

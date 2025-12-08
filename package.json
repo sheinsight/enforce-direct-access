@@ -1,0 +1,49 @@
+{
+  "name": "enforce-direct-access",
+  "version": "0.0.1",
+  "description": "Babel and SWC plugins for enforcing direct access patterns",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' run build",
+    "test": "pnpm -r run test",
+    "test:unit": "pnpm -r --filter './packages/*' run test",
+    "test:e2e": "pnpm --filter e2e-tests run test",
+    "test:babel": "pnpm --filter e2e-tests run test:babel",
+    "test:swc": "pnpm --filter e2e-tests run test:swc",
+    "test:watch": "pnpm -r run test:watch",
+    "clean": "pnpm -r run clean && rm -rf node_modules",
+    "dev": "pnpm -r --parallel run dev",
+    "publish": "pnpm -r --filter './packages/*' publish",
+    "prerelease": "node ./script/prerelease.mts"
+  },
+  "keywords": [
+    "babel",
+    "swc",
+    "plugin",
+    "enforce",
+    "direct-access"
+  ],
+  "author": {
+    "name": "ityuany"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@babel/types": "^7.28.5",
+    "@shined/lecp": "^0.1.1",
+    "@types/babel__core": "^7.20.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
+  },
+  "dependencies": {
+    "@types/semver": "^7.7.1",
+    "enquirer": "^2.4.1",
+    "execa": "^9.6.0",
+    "globby": "^16.0.0",
+    "read-pkg": "^10.0.0",
+    "semver": "^7.7.3",
+    "write-pkg": "^7.0.0"
+  }
+}

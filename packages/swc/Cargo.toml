@@ -1,0 +1,18 @@
+[package]
+authors      = ["ityuany"]
+description  = "SWC plugin for enforcing direct access patterns"
+edition      = "2021"
+name         = "swc_plugin_enforce_direct_access"
+repository   = "https://github.com/yourusername/enforce-direct-access"
+rust-version = "1.82"
+version      = "0.0.1"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+heck       = { workspace = true }
+regex      = { workspace = true }
+serde      = { workspace = true }
+serde_json = { workspace = true }
+swc_core   = { workspace = true, features = ["ecma_plugin_transform"] }

@@ -1,0 +1,24 @@
+{
+  "name": "e2e-tests",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:babel": "vitest run babel.test.ts",
+    "test:swc": "vitest run swc.test.ts",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@swc/core": "^1.10.6",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
+  },
+  "dependencies": {
+    "@shined/babel-plugin-enforce-direct-access": "workspace:*",
+    "@shined/swc-plugin-enforce-direct-access": "workspace:*"
+  }
+}
