@@ -1,6 +1,6 @@
 {
   "name": "@shined/babel-plugin-enforce-direct-access",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "description": "A Babel plugin to enforce direct access patterns",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.ts",
@@ -46,5 +46,5 @@
     "vitest": "^4.0.12"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@shined/babel-plugin-enforce-direct-access@0.0.1-alpha.4"
+  "_id": "@shined/babel-plugin-enforce-direct-access@0.0.1-alpha.5"
 }
