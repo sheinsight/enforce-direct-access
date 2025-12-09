@@ -1,6 +1,6 @@
 {
   "name": "@shined/swc-plugin-enforce-direct-access",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "description": "SWC plugin for enforcing direct access patterns",
   "author": {
     "name": "ityuany"
@@ -35,5 +35,5 @@
     "clean-pkg-json": "^1.3.0"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@shined/swc-plugin-enforce-direct-access@0.0.1-alpha.3"
+  "_id": "@shined/swc-plugin-enforce-direct-access@0.0.1-alpha.4"
 }
