@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ityuany/enforce-direct-access.git"
+    "url": "git+https://github.com/sheinsight/enforce-direct-access.git"
   },
   "scripts": {
     "build": "lecp",
