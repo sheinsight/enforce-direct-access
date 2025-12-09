@@ -1,6 +1,6 @@
 {
   "name": "enforce-direct-access",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "description": "Babel and SWC plugins for enforcing direct access patterns",
   "private": true,
   "scripts": {
@@ -47,5 +47,5 @@
     "write-pkg": "^7.0.0"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "enforce-direct-access@0.0.1-alpha.6"
+  "_id": "enforce-direct-access@0.0.1-alpha.7"
 }
