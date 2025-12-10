@@ -37,13 +37,26 @@ export default function enforceDirectAccessPlugin(): PluginObj {
           return;
         }
 
-        // 构建完整路径（忽略可选链操作符）
-        const result = buildExpressionPath(path.node);
-        if (!result) {
+        // 检查父节点是否为 OptionalCallExpression 的 callee
+        // 如果是，说明这是对方法调用的可选链（如 foo?.bar()），不是对路径的可选链
+        // 例如：process.env.value?.toString() - 可选链应用在方法调用上，不是路径访问上
+        // 这种情况下，process.env.value 是直接访问，不应该报错
+        if (
+          parent.isOptionalCallExpression() &&
+          parent.node.callee === path.node
+        ) {
           return;
         }
 
-        const { path: exprPath, baseIdentifier } = result;
+        // 构建 object 部分的路径（可选链之前的部分）
+        // 对于 process.env.API_KEY?.toLowerCase()，object 是 process.env.API_KEY
+        // 对于 process.env?.API_KEY，object 是 process.env
+        const objectResult = buildExpressionPath(path.node.object);
+        if (!objectResult) {
+          return;
+        }
+
+        const { path: objectPath, baseIdentifier } = objectResult;
 
         // 如果有基础标识符，检查是否为全局引用
         // 如果是局部变量，跳过检查
@@ -51,12 +64,37 @@ export default function enforceDirectAccessPlugin(): PluginObj {
           return;
         }
 
-        // 检查是否匹配配置的路径
-        const matchedPath = matchConfigPath(exprPath, configPaths);
-        if (matchedPath) {
-          throw path.buildCodeFrameError(
-            createErrorMessage('optional-chaining', matchedPath)
-          );
+        // 获取 property 名称，构建完整路径
+        let propertyName: string | null = null;
+        if (
+          path.node.property.type === 'Identifier' &&
+          !path.node.computed
+        ) {
+          propertyName = path.node.property.name;
+        }
+
+        const fullPath = propertyName
+          ? `${objectPath}.${propertyName}`
+          : null;
+
+        // 检查 object 路径或完整路径是否匹配配置
+        // 规则：
+        // 1. object 精确匹配：process.env?.API_KEY
+        // 2. fullPath 精确匹配：process?.env
+        for (const configPath of configPaths) {
+          if (objectPath === configPath) {
+            // object 精确匹配：process.env?.API_KEY
+            throw path.buildCodeFrameError(
+              createErrorMessage('optional-chaining', configPath)
+            );
+          } else if (fullPath && fullPath === configPath) {
+            // fullPath 精确匹配：process?.env
+            throw path.buildCodeFrameError(
+              createErrorMessage('optional-chaining', configPath)
+            );
+          }
+          // 如果 object 或 fullPath 是配置路径的子路径，不报错
+          // 例如：process.env.API_KEY?.toLowerCase() (配置是 process.env)
         }
       },
 

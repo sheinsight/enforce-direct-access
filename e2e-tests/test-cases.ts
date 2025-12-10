@@ -105,4 +105,18 @@ export const testCases: TestCase[] = [
     shouldError: true,
     errorPattern: /Optional chaining with 'import\.meta\.env' is unsafe/,
   },
+
+  // Optional chaining on method calls (should NOT error)
+  {
+    description: 'should not error on optional method call: process.env.mock_boolean?.toString()',
+    code: 'const a = process.env.mock_boolean?.toString();',
+    config: { paths: ['process'] },
+    shouldError: false,
+  },
+  {
+    description: 'should not error on optional method call: process.env.API_KEY?.toLowerCase()',
+    code: 'const a = process.env.API_KEY?.toLowerCase();',
+    config: { paths: ['process.env'] },
+    shouldError: false,
+  },
 ];

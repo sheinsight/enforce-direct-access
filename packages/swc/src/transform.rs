@@ -113,30 +113,6 @@ impl EnforceDirectAccessTransformer {
         Some((parts.join("."), has_optional))
     }
 
-    /// 检查路径是否以某个前缀开始
-    fn path_starts_with(&self, full_path: &str, prefix: &str) -> bool {
-        if full_path == prefix {
-            return true;
-        }
-        full_path.starts_with(&format!("{}.", prefix))
-    }
-
-    /// 检查表达式路径是否匹配配置的路径
-    fn match_config_path(&self, expr_path: &str) -> Option<String> {
-        // 精确匹配
-        if self.config_paths.contains(expr_path) {
-            return Some(expr_path.to_string());
-        }
-
-        // 检查是否是某个配置路径的子路径
-        for config_path in &self.config_paths {
-            if self.path_starts_with(expr_path, config_path) {
-                return Some(config_path.clone());
-            }
-        }
-
-        None
-    }
 
     /// 处理可选链表达式
     fn handle_optional_chain_expr(&self, expr: &Expr, span: Span) {
@@ -145,10 +121,41 @@ impl EnforceDirectAccessTransformer {
             return;
         }
 
-        if let Some((expr_path, has_optional)) = self.build_expression_path(expr) {
-            if has_optional {
-                if let Some(matched_path) = self.match_config_path(&expr_path) {
-                    report_optional_chaining_error(&matched_path, span);
+        // 检查 OptChain 的 object 部分（可选链之前的部分）
+        // 对于 process.env.API_KEY?.toLowerCase()，object 是 process.env.API_KEY
+        // 对于 process.env?.API_KEY，object 是 process.env
+        if let Expr::OptChain(opt_chain) = expr {
+            if let OptChainBase::Member(member) = &*opt_chain.base {
+                // 构建 object 部分的路径
+                if let Some((object_path, _)) = self.build_expression_path(&member.obj) {
+                    // 获取 property 名称，构建完整路径
+                    let property_name = if let MemberProp::Ident(ident) = &member.prop {
+                        Some(ident.sym.to_string())
+                    } else {
+                        None
+                    };
+
+                    let full_path = property_name.as_ref().map(|prop| format!("{}.{}", object_path, prop));
+
+                    // 检查 object 路径或完整路径是否匹配配置
+                    // 规则：
+                    // 1. object 精确匹配：process.env?.API_KEY
+                    // 2. fullPath 精确匹配：process?.env
+                    for config_path in &self.config_paths {
+                        if &object_path == config_path {
+                            // object 精确匹配：process.env?.API_KEY
+                            report_optional_chaining_error(config_path, span);
+                            return;
+                        } else if let Some(ref full) = full_path {
+                            if full == config_path {
+                                // fullPath 精确匹配：process?.env
+                                report_optional_chaining_error(config_path, span);
+                                return;
+                            }
+                        }
+                        // 如果 object 或 fullPath 是配置路径的子路径，不报错
+                        // 例如：process.env.API_KEY?.toLowerCase() (配置是 process.env)
+                    }
                 }
             }
         }
